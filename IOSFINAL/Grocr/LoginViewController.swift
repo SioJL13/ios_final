@@ -12,7 +12,7 @@ class LoginViewController: UIViewController {
   
   // MARK: Actions
   @IBAction func loginDidTouch(_ sender: AnyObject) {
-    if textFieldLoginEmail.text != "" && textFieldLoginEmail.text != ""{
+    if textFieldLoginEmail.text != "" && textFieldLoginPassword.text != ""{
       FIRAuth.auth()!.signIn(withEmail: textFieldLoginEmail.text!,
                              password: textFieldLoginPassword.text!)
       performSegue(withIdentifier: loginToList, sender: nil)

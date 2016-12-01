@@ -50,14 +50,13 @@ class GroceryListTableViewController: UITableViewController {
     
     tableView.allowsMultipleSelectionDuringEditing = false
     
-    /*userCountBarButtonItem = UIBarButtonItem(title: "1",
+     /*userCountBarButtonItem = UIBarButtonItem(title: "Meses",
      style: .plain,
      target: self,
      action: #selector(userCountButtonDidTouch))
      userCountBarButtonItem.tintColor = UIColor.white
      navigationItem.leftBarButtonItem = userCountBarButtonItem*/
     
-    //user = User(uid: "FakeId", email: "hungry@person.foodSSS")
     
     ref.child(String(mes)).observe(.value, with: { snapshot in
       //print(snapshot.value)
@@ -81,6 +80,7 @@ class GroceryListTableViewController: UITableViewController {
   // MARK: UITableView Delegate methods
   
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    self.total = 0
     return items.count
   }
   
@@ -91,8 +91,8 @@ class GroceryListTableViewController: UITableViewController {
     cell.textLabel?.text = groceryItem.name
     cell.detailTextLabel?.text = "$ \(groceryItem.price)"
     
-    
     if totalFlag {
+      
       self.total = self.total + Int(groceryItem.price)!
       self.totalLabel.text = "$ \(String(self.total))"
     }
@@ -130,8 +130,7 @@ class GroceryListTableViewController: UITableViewController {
     //self.present(controller!, animated: true, completion: nil)
     
     
-    totalFlag = false
-    //print("CLICK AQUIII!!!")
+    self.total = 0
     tableView.reloadData()
   }
   

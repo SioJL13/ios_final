@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import Eureka
 
-class detailViewController: UIViewController {
+class detailViewController: FormViewController {
   
   var monthName = Int()
   var activityName = String()
@@ -19,10 +20,54 @@ class detailViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     ref.child(String(monthName)).child(activityName).observe(.value, with: { snapshot in
-      //print("Hello")
+   
       let val = snapshot.value as? NSDictionary
       let precio = val!["price"] as? String ?? ""
-      print("PRECIOOO " + precio)
+      let description = val!["description"] as? String ?? ""
+    
+      
+      self.form = Section("Detalles")
+        <<< LabelRow(){ row in
+          row.tag = "name"
+          row.title = "Actividad"
+          row.value = self.activityName
+          
+          
+        }
+        <<< TextRow(){ row in
+          row.tag = "precio"
+          row.title = "Gasto"
+          row.value = precio
+          row.onCellHighlightChanged({cell, row in
+            self.ref.child(String(self.monthName)).child(self.activityName).child("price").setValue(row.value)
+          
+          })
+          
+        }
+        <<< TextAreaRow("notes") { row in
+          row.tag = "descripcion"
+          row.placeholder = "Descripcion"
+          row.textAreaHeight = .dynamic(initialTextViewHeight: 50)
+          row.value = description
+          row.onCellHighlightChanged({cell, row in
+            self.ref.child(String(self.monthName)).child(self.activityName).child("description").setValue(row.value)
+            
+          })
+        }
+        
+        +++ Section("Section2")
+        /*<<< DateRow(){
+          let calendar = NSCalendar.current
+          let components = NSDateComponents()
+          components.day = 5
+          components.month = 10
+          components.year = 2016
+          
+          $0.title = "Date Row"
+          $0.value = calendar.date(from: components as DateComponents)
+      }*/
+    
+      //self.form.setValues(["name": self.activityName, "precio": precio, "descripcion": description])
       
       
     })
