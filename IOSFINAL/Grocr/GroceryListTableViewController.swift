@@ -23,7 +23,7 @@
 import UIKit
 
 class GroceryListTableViewController: UITableViewController {
-
+  
   // MARK: Constants
   let listToUsers = "ListToUsers"
   
@@ -32,7 +32,7 @@ class GroceryListTableViewController: UITableViewController {
   var total = 0
   var totalFlag = true
   
-  // MARK: Properties 
+  // MARK: Properties
   var items: [GroceryItem] = []
   var user: User!
   var userCountBarButtonItem: UIBarButtonItem!
@@ -51,13 +51,13 @@ class GroceryListTableViewController: UITableViewController {
     tableView.allowsMultipleSelectionDuringEditing = false
     
     /*userCountBarButtonItem = UIBarButtonItem(title: "1",
-                                             style: .plain,
-                                             target: self,
-                                             action: #selector(userCountButtonDidTouch))
-    userCountBarButtonItem.tintColor = UIColor.white
-    navigationItem.leftBarButtonItem = userCountBarButtonItem*/
+     style: .plain,
+     target: self,
+     action: #selector(userCountButtonDidTouch))
+     userCountBarButtonItem.tintColor = UIColor.white
+     navigationItem.leftBarButtonItem = userCountBarButtonItem*/
     
-    user = User(uid: "FakeId", email: "hungry@person.foodSSS")
+    //user = User(uid: "FakeId", email: "hungry@person.foodSSS")
     
     ref.child(String(mes)).observe(.value, with: { snapshot in
       //print(snapshot.value)
@@ -91,8 +91,6 @@ class GroceryListTableViewController: UITableViewController {
     cell.textLabel?.text = groceryItem.name
     cell.detailTextLabel?.text = "$ \(groceryItem.price)"
     
-    toggleCellCheckbox(cell, isCompleted: groceryItem.completed)
-    
     
     if totalFlag {
       self.total = self.total + Int(groceryItem.price)!
@@ -108,11 +106,11 @@ class GroceryListTableViewController: UITableViewController {
   }
   
   /*override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-    if editingStyle == .delete {
-      items.remove(at: indexPath.row)
-      tableView.reloadData()
-    }
-  }*/
+   if editingStyle == .delete {
+   items.remove(at: indexPath.row)
+   tableView.reloadData()
+   }
+   }*/
   
   override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
     if editingStyle == .delete {
@@ -124,25 +122,17 @@ class GroceryListTableViewController: UITableViewController {
   }
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    guard let cell = tableView.cellForRow(at: indexPath) else { return }
-    var groceryItem = items[indexPath.row]
-    let toggledCompletion = !groceryItem.completed
+    //guard let cell = tableView.cellForRow(at: indexPath) else { return }
+    let groceryItem = items[indexPath.row]
+    print(groceryItem)
     
-    toggleCellCheckbox(cell, isCompleted: toggledCompletion)
-    groceryItem.completed = toggledCompletion
+    //let controller = self.storyboard?.instantiateViewController(withIdentifier: "detalleCelda")
+    //self.present(controller!, animated: true, completion: nil)
+    
+    
+    totalFlag = false
+    //print("CLICK AQUIII!!!")
     tableView.reloadData()
-  }
-  
-  func toggleCellCheckbox(_ cell: UITableViewCell, isCompleted: Bool) {
-    if !isCompleted {
-      cell.accessoryType = .none
-      cell.textLabel?.textColor = UIColor.black
-      cell.detailTextLabel?.textColor = UIColor.black
-    } else {
-      cell.accessoryType = .checkmark
-      cell.textLabel?.textColor = UIColor.gray
-      cell.detailTextLabel?.textColor = UIColor.gray
-    }
   }
   
   // MARK: Add Item
@@ -171,10 +161,10 @@ class GroceryListTableViewController: UITableViewController {
                                     // 2
                                     let groceryItem = GroceryItem(name: firstText.text!,
                                                                   price: secondText.text!,
-                                                                  completed: false,
                                                                   month: month,
-                                                                  day: day
-                                                                  )
+                                                                  day: day,
+                                                                  description:""
+                                    )
                                     
                                     // 3
                                     let groceryItemRef = self.ref.child(mesString).child(firstText.text!.lowercased())
@@ -206,6 +196,21 @@ class GroceryListTableViewController: UITableViewController {
   
   func userCountButtonDidTouch() {
     performSegue(withIdentifier: listToUsers, sender: nil)
+  }
+  
+  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    
+    
+    
+    if segue.identifier == "detalleSegue",
+      let destination = segue.destination as? detailViewController,
+      let IndexPath = tableView.indexPathForSelectedRow?.row
+    {
+      let groceryItem = items[IndexPath]
+      destination.activityName = groceryItem.name
+      destination.monthName = groceryItem.month
+      
+    }
   }
   
 }

@@ -27,19 +27,19 @@ struct GroceryItem {
   let key: String
   let name: String
   let price: String
+  let description: String
   let ref: FIRDatabaseReference?
-  var completed: Bool
   let month: Int
   let day: Int
   
   
-  init(name: String, price: String, completed: Bool, month: Int, day: Int ,key: String = "") {
+  init(name: String, price: String, month: Int, day: Int , description: String,key: String = "") {
     self.key = key
     self.name = name
     self.price = price
-    self.completed = completed
     self.month = month
     self.day = day
+    self.description = description
     self.ref = nil
   }
   
@@ -48,9 +48,9 @@ struct GroceryItem {
     let snapshotValue = snapshot.value as! [String: AnyObject]
     name = snapshotValue["name"] as! String
     price = snapshotValue["price"] as! String
-    completed = snapshotValue["completed"] as! Bool
     month = snapshotValue["month"] as! Int
     day = snapshotValue["day"] as! Int
+    description = snapshotValue["description"] as! String
     ref = snapshot.ref
   }
   
@@ -58,9 +58,9 @@ struct GroceryItem {
     return [
       "name": name,
       "price": price,
-      "completed": completed,
       "month": month,
-      "day": day
+      "day": day,
+      "description": description
     ]
   }
   
